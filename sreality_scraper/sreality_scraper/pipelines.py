@@ -12,9 +12,9 @@ class SrealityScraperPipeline:
     def __init__(self):
         self.connection = psycopg2.connect(
             host="db",
-            database="sreality_data",
-            user="postgres",
-            password="admin"
+            database="sreality_dat",
+            user="admin",
+            password="admin1"
         )
         self.cursor = self.connection.cursor()
 

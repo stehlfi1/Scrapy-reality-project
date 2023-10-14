@@ -2,36 +2,31 @@ version: '3.8'
 services:
   db:
     image: postgres:13
+    restart: always
+    container_name: sreality_db_container
     environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: sreality_data
-      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin1
+      POSTGRES_DB: sreality_dat
+      POSTGRES_USER: admin
     ports:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
   
-  scraper:
-    build:
-      context: .
-      dockerfile: Dockerfile.scraper
+  app:
+    build: .
     depends_on:
-      - db
-    entrypoint: /bin/bash
-    command: -c "scrapy runspider /app/scraper/sreality_scraper/spiders/item_spider_1.py && python /app/server/http_server.py"
-    volumes:
-      - ./sreality_scraper:/app/scraper
-
-  web_server:
-    build:
-      context: .
-      dockerfile: Dockerfile.web_server
+      db:
+        condition: service_started
     ports:
       - "8070:8070"
-    depends_on:
-      - db
-    volumes:
-      - ./web_server:/app/server
+    links:
+      - "db:database"
+
+  adminer:
+    image: adminer:4.8.1-standalone
+    ports:
+      - "8081:8080"
 
 volumes:
   db-data:

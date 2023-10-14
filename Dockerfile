@@ -1,26 +1,23 @@
-# Use an official Python runtime as a parent image
+# Base Image
 FROM python:3.9
 
-# Set the working directory in the container
+# Working Directory
 WORKDIR /app
 
-# Copy the requirements files into the container at /app
-COPY ./sreality_scraper/requirements.txt ./scraper_requirements.txt
-COPY ./web_server/requirements.txt ./server_requirements.txt
+# Copy requirements.txt and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r scraper_requirements.txt
-RUN pip install --trusted-host pypi.python.org -r server_requirements.txt
+# Copy sreality_scraper and web_server
+COPY sreality_scraper/ sreality_scraper/
+COPY web_server/ web_server/
 
-# Set the working directory
-WORKDIR /app
+# Copy entry_script.sh
+COPY entry_script.sh .
 
-# Copy the current directory contents into the container at /app
-COPY ./sreality_scraper /app/scraper
-COPY ./web_server /app/server
+# Make script executable
+RUN chmod +x entry_script.sh
 
-# Make ports available to the world outside this container
-EXPOSE 8070
+# Command to run
+CMD [ "./entry_script.sh" ]
 
-# Run command
-CMD ["bash", "-c", "scrapy runspider /app/scraper/sreality_scraper/spiders/item_spider_1.py && python /app/server/http_server.py"]

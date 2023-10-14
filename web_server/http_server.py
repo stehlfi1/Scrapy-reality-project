@@ -6,12 +6,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
         self.end_headers()
-
+        
         conn = psycopg2.connect(
-            host="localhost",
-            database="sreality_data",
-            user="postgres",
-            password="admin"
+            host="db",
+            database="sreality_dat",
+            user="admin",
+            password="admin1"
         )
         cursor = conn.cursor()
         cursor.execute("SELECT title, image_url FROM scraped_data LIMIT 500")
@@ -25,5 +25,6 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(f"<h1>{title}</h1><img src='{image_url}'></img>".encode('utf-8'))
 
 if __name__ == '__main__':
-    httpd = HTTPServer(('localhost', 8070), SimpleHTTPRequestHandler)
+    print("i am launched")
+    httpd = HTTPServer(('0.0.0.0', 8070), SimpleHTTPRequestHandler)
     httpd.serve_forever()
