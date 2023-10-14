@@ -16,7 +16,7 @@ Utilizing Scrapy to scrape data, which is then stored in a PostgreSQL database a
   
 2. **Navigate to the project directory:**
     ```bash
-    cd Luxoris
+    cd Scrapy-reality-project
     ```
 
 3. **Build and Launch the Docker Compose:**
